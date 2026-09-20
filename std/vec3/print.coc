@@ -1,0 +1,18 @@
+
+vec3 : *;
+vec3 = "../vec3";
+
+float : *;
+float = "../../c/float";
+
+print_float : &R : *. float -> R -> R;
+print_float = "../../c/io/print_float";
+
+\R : *.
+\v : vec3.
+\r : R.
+
+print_float R ("z" v),
+print_float R ("y" v),
+print_float R ("x" v),
+r

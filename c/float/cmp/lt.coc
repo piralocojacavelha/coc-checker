@@ -1,0 +1,10 @@
+
+float : *;
+float = "../../float";
+
+bool : *;
+bool = "../../bool";
+
+coc_c_float_lt : float -> float -> bool;
+
+coc_c_float_lt

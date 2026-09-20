@@ -3,26 +3,60 @@
 void : *;
 void = "c/void";
 
+bool : *;
+bool = "c/bool";
+
+true : bool;
+false : bool;
+
+int : *;
+int = "c/int";
+
+lt : int -> int -> bool;
+lt = "c/int/cmp/lt";
+
+
+if : &R : *. bool -> R -> R -> R;
+if = "c/if";
+
+64 : int;
+64 = "c/int/64";
+
+0 : int;
+0 = "c/int/0";
+
+1 : int;
+1 = "c/int/1";
+
+for : &R : *. int -> R -> (int -> R -> bool) -> (int -> int) -> (int -> R -> R) -> R;
+for = "c/loop/for";
+
+Option : * -> *;
+Option = "std/Option";
+
+some_opt : &A : *. A -> Option A;
+some_opt = "std/Option/some";
+
+nil_opt : &A : *. Option A;
+nil_opt = "std/Option/nil";
+
+option_match : &A : *. &R : *. Option A -> R -> (A -> R) -> R;
+option_match = "std/Option/match";
+
 run : (void -> void) -> void;
 run = "c/run";
-
-Pair : * -> * -> *;
-Pair = "std/Pair";
-
-mkpair : &A : *. &B : *. A -> B -> Pair A B;
-mkpair = "std/Pair/mk";
-
-fst : &A : *. &B : *. Pair A B -> A;
-fst = "std/Pair/fst";
-
-snd : &A : *. &B : *. Pair A B -> B;
-snd = "std/Pair/snd";
 
 float : *;
 float = "c/float";
 
+ltf : float -> float -> bool;
+ltf = "c/float/cmp/lt";
+
 print_float : &R : *. float -> R -> R;
 print_float = "c/io/print_float";
+
+print_int : &R : *. int -> R -> R;
+print_int = "c/io/print_int";
 
 vec3 : *;
 vec3 = "std/vec3";
@@ -39,50 +73,31 @@ v3 = "std/vec3/mk";
 0_25f : float;
 0_25f = "c/float/0_25";
 
-v3_x : vec3 -> float;
-v3_x = "std/vec3/x";
+coc_c_float_0_01 : float;
 
-v3_y : vec3 -> float;
-v3_y = "std/vec3/y";
-
-v3_z : vec3 -> float;
-v3_z = "std/vec3/z";
-
-mulf : float -> float -> float;
-mulf = "c/float/mul";
-
-addf : float -> float -> float;
-addf = "c/float/add";
+0_01f : float;
+0_01f = coc_c_float_0_01;
 
 subf : float -> float -> float;
 subf = "c/float/sub";
 
-sqrtf : float -> float;
-sqrtf = "c/float/sqrt";
-
 length : vec3 -> float;
 length = "std/vec3/length";
 
-v3_comp_wise2 : (float -> float -> float) ->
-    vec3 -> vec3 -> vec3;
-v3_comp_wise2 =
-    \op : float -> float -> float.
-    \u : vec3.
-    \v : vec3.
-
-    x : float;
-    x = op (v3_x u) (v3_x v);
-
-    y : float;
-    y = op (v3_y u) (v3_y v);
-
-    z : float;
-    z = op (v3_z u) (v3_z v);
-
-    v3 x y z;
+v3_add : vec3 -> vec3 -> vec3;
+v3_add = "std/vec3/add";
 
 v3_sub : vec3 -> vec3 -> vec3;
-v3_sub = v3_comp_wise2 subf;
+v3_sub = "std/vec3/sub";
+
+v3_scale : float -> vec3 -> vec3;
+v3_scale = "std/vec3/scale";
+
+add : int -> int -> int;
+add = "c/int/add";
+
+print_vec3 : &R : *. vec3 -> R -> R;
+print_vec3 = "std/vec3/print";
 
 sdf : vec3 -> float;
 sdf = \v : vec3.
@@ -97,7 +112,31 @@ sdf = \v : vec3.
 
     subf dist r;
 
+raymarch : vec3 -> vec3 -> bool;
+raymarch =
+    \pos : vec3.
+    \dir : vec3.
+
+    option_match vec3 bool (for (Option vec3) 0 (some_opt vec3 pos) (\n : int. \pos : Option vec3. lt n 64)
+        (add 1)
+        (\n : int. \pos : Option vec3.
+            option_match vec3 (Option vec3) pos
+                (nil_opt vec3),
+                
+                \pos : vec3.
+
+                d : float;
+                d = sdf pos;
+
+                if (Option vec3) (ltf d 0_01f)
+                    (nil_opt vec3)
+                    (some_opt vec3, v3_add pos (v3_scale d dir))))
+        true
+        (\v : vec3. false);
+
 main : void -> void;
-main = print_float void, sdf (v3 0f 0f 0f);
+main = if (void -> void) (raymarch (v3 0f 0f 0f) (v3 0f 0f 1f))
+    (print_int void 1)
+    (print_int void 0);
 
 run main

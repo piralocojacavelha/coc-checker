@@ -1,0 +1,14 @@
+
+vec3 : *;
+vec3 = "../vec3";
+
+float : *;
+float = "../../c/float";
+
+mul : float -> float -> float;
+mul = "../../c/float/mul";
+
+comp_wise : (float -> float) -> vec3 -> vec3;
+comp_wise = "comp_wise";
+
+\f : float. comp_wise (mul f)

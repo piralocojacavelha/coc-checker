@@ -1,0 +1,14 @@
+
+vec3 : *;
+vec3 = "../vec3";
+
+float : *;
+float = "../../c/float";
+
+sub : float -> float -> float;
+sub = "../../c/float/sub";
+
+comp_wise : (float -> float -> float) -> vec3 -> vec3 -> vec3;
+comp_wise = "comp_wise_bin";
+
+comp_wise sub

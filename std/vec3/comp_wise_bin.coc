@@ -1,0 +1,39 @@
+
+float : *;
+float = "../../c/float";
+
+vec3 : *;
+vec3 = "../vec3";
+
+v3_x : vec3 -> float;
+v3_x = "x";
+
+v3_y : vec3 -> float;
+v3_y = "y";
+
+v3_z : vec3 -> float;
+v3_z = "z";
+
+v3 : float -> float -> float -> vec3;
+v3 = "mk";
+
+v3_comp_wise2 : (float -> float -> float) ->
+    vec3 -> vec3 -> vec3;
+v3_comp_wise2 =
+    \op : float -> float -> float.
+    \u : vec3.
+    \v : vec3.
+
+    x : float;
+    x = op (v3_x u) (v3_x v);
+
+    y : float;
+    y = op (v3_y u) (v3_y v);
+
+    z : float;
+    z = op (v3_z u) (v3_z v);
+
+    v3 x y z;
+
+
+v3_comp_wise2

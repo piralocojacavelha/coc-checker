@@ -1,0 +1,7 @@
+
+Option : * -> *;
+Option = "../Option";
+
+coc_some_opt : &A : *. A -> Option A;
+
+coc_some_opt

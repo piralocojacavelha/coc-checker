@@ -75,7 +75,7 @@ void print_term(int id) {
     break;
 
   default:
-    assert(0);
+    break;
   }
 }
 
@@ -291,9 +291,9 @@ static inline int isfree(const char *j, int id) {
 int unique=0;
 static inline int subst(const char *j, int value, int id) {
   term t = ts[id];
-  int source = 0;
-  int old = id;
-  if (tags[id] == TYPE) id = alloc(id, tags[id], t);
+  term old = t;
+  int old2 = id;
+  if (tags[id] == TYPE) (void)0;
   else if (tags[id] == VAR) id = !strcmp(j, t.var) ? value : id;
   else if (tags[id] == LAM || tags[id] == PI) {
     t.type = subst(j, value, t.type);
@@ -308,11 +308,13 @@ static inline int subst(const char *j, int value, int id) {
           t.param = v.var;
         }
         t.body = subst(j, value, t.body);
+        if (!strcmp(t.param, old.param) && t.type == old.type && t.body == old.body) return id;
         id = alloc(id, tags[id], t);
     }
   } else if (tags[id] == APP) {
     t.func = subst(j, value, t.func);
     t.arg = subst(j, value, t.arg);
+    if (t.func == old.func && t.arg == old.arg) return id;
     id = alloc(id, tags[id], t);
   } else {
     t.ltype = subst(j, value, t.ltype);
@@ -326,6 +328,7 @@ static inline int subst(const char *j, int value, int id) {
       t.lname = v.var;
     }
     t.lbody = subst(j, value, t.lbody);
+    if (!strcmp(t.lname, old.lname) && t.ltype == old.ltype && t.lvalue == old.lvalue && t.lbody == old.lbody) return id;
     id = alloc(id, LET, t);
   }
 
@@ -341,8 +344,8 @@ static inline int evaluate(int id) {
     if (t.special) return t.body;
     return alloc(id, tags[id], t);
   } else if (tags[id] == APP) {
-    t.func = evaluate(t.func);
     t.arg = evaluate(t.arg);
+    t.func = evaluate(t.func);
     if (tags[t.func] != LAM) {
       return alloc(id, APP, t);
     }
@@ -377,6 +380,10 @@ static const char *ctx_names[NTERMS];
 static int ctx_types[NTERMS];
 static int ctx_count=0;
 
+static const char *special_names[NTERMS];
+static int special_types[NTERMS];
+static int special_count=0;
+
 static inline int infer(int id) {
   term t = ts[id];
   if (tags[id] == TYPE) {
@@ -389,6 +396,11 @@ static inline int infer(int id) {
         return ctx_types[i];
       }
     }
+    for (int i=special_count-1; i >= 0; --i) {
+      if (!strcmp(special_names[i], t.var)) {
+        return special_types[i];
+      }
+    }
     printf("Unbound identifier: %s\n", t.var);
     exit(1);
   } else if (tags[id] == LAM || tags[id] == PI) {
@@ -396,6 +408,10 @@ static inline int infer(int id) {
     t.type = evaluate(t.type);
     ctx_names[ctx_count] = t.param;
     ctx_types[ctx_count++] = t.type;
+    if (t.special) {
+        special_names[special_count] = t.param;
+        special_types[special_count++] = t.type;
+    }
     t.body = infer(t.body);
     if (t.special) return t.body;
     --ctx_count;
@@ -492,12 +508,13 @@ int main(int argc, char **argv) {
     buf[n] = 0;
     input = buf;
 
+    char *path = strdup(file_name);
     char *dr = realpath(dirname(argv[i]), NULL);
     chdir(dr);
 
     char msg[256];
-    sprintf(msg, "checking %s...", file_name);
-    printf("%-40s", msg);
+    sprintf(msg, "checking %s...", path);
+    if (!comp) printf("%-40s", msg);
     fflush(stdout);
 
     int v = parse_term();

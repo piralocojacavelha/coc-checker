@@ -1,0 +1,88 @@
+
+
+void : *;
+void = "c/void";
+
+bool : *;
+bool = "c/bool";
+
+int : *;
+int = "c/int";
+
+0 : int;
+0 = "c/int/0";
+
+for : &R : *. int -> R -> (int -> R -> bool) -> (int -> int) -> (int -> R -> R) -> R;
+for = "c/loop/for";
+
+Option : * -> *;
+Option = "std/Option";
+
+some_opt : &A : *. A -> Option A;
+some_opt = "std/Option/some";
+
+run : (void -> void) -> void;
+run = "c/run";
+
+float : *;
+float = "c/float";
+
+print_float : &R : *. float -> R -> R;
+print_float = "c/io/print_float";
+
+vec3 : *;
+vec3 = "std/vec3";
+
+v3 : float -> float -> float -> vec3;
+v3 = "std/vec3/mk";
+
+0f : float;
+0f = "c/float/0";
+
+1f : float;
+1f = "c/float/1";
+
+0_25f : float;
+0_25f = "c/float/0_25";
+
+subf : float -> float -> float;
+subf = "c/float/sub";
+
+length : vec3 -> float;
+length = "std/vec3/length";
+
+v3_sub : vec3 -> vec3 -> vec3;
+v3_sub = "std/vec3/sub";
+
+sdf : vec3 -> float;
+sdf = \v : vec3.
+    c : vec3;
+    c = v3 0f 0f 1f;
+
+    r : float;
+    r = 0_25f;
+
+    dist : float;
+    dist = length (v3_sub v c);
+
+    subf dist r;
+
+raymarch : vec3 -> vec3 -> bool;
+raymarch =
+    \pos : vec3.
+    \dir : vec3.
+
+    for (Option vec3) 0 (some_opt vec3 pos) (\n : int. \pos : Option vec3. lt n 64)
+        (\n : int. \pos : Option vec3.
+            option_match vec3 pos
+                (nil_opt vec3)
+                (\pos : vec3.
+                    d : float;
+                    d = sdf pos;
+
+                    some_opt vec3, v3_add pos (v3_scale d dir)));
+
+main : void -> void;
+main = print_float void, sdf (v3 0f 0f 0f);
+
+run main

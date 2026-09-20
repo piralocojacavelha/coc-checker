@@ -1,10 +1,4 @@
-Pair : * -> * -> *;
-Pair = "Pair";
 
-float : *;
-float = "../c/float";
+coc_vec3 : *;
 
-vec3 : *;
-vec3 = Pair float (Pair float float);
-
-vec3
+coc_vec3
