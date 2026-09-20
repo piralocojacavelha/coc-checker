@@ -1,0 +1,42 @@
+
+vec3 : *;
+vec3 = "../vec3";
+
+float : *;
+float = "../../c/float";
+
+mulf : float -> float -> float;
+mulf = "../../c/float/mul";
+
+addf : float -> float -> float;
+addf = "../../c/float/add";
+
+sqrtf : float -> float;
+sqrtf = "../../c/float/sqrt";
+
+length : vec3 -> float;
+length = \v : vec3.
+    x : float;
+    x = "x" v;
+
+    y : float;
+    y = "y" v;
+
+    z : float;
+    z = "z" v;
+
+    x_sq : float;
+    x_sq = mulf x x;
+
+    y_sq : float;
+    y_sq = mulf y y;
+
+    z_sq : float;
+    z_sq = mulf z z;
+
+    sum : float;
+    sum = addf x_sq (addf y_sq z_sq);
+
+    sqrtf sum;
+
+length
