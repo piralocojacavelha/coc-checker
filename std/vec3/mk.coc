@@ -1,0 +1,20 @@
+
+float : *;
+float = "../../c/float";
+
+vec3 : *;
+vec3 = "../vec3";
+
+Pair : * -> * -> *;
+Pair = "../Pair";
+
+mkpair : &A : *. &B : *. A -> B -> Pair A B;
+mkpair = "../Pair/mk";
+
+v3 : float -> float -> float -> vec3;
+v3 = \x : float. \y : float. \z : float.
+    mkpair float (Pair float float)
+        x
+        (mkpair float float y z);
+
+v3

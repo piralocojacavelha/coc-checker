@@ -1,0 +1,55 @@
+
+int : *;
+int = "../int.coc";
+
+bool : *;
+bool = "../bool.coc";
+
+Pair : * -> * -> *;
+Pair = "../../std/Pair.coc";
+
+mk : &A : *. &B : *. A -> B -> Pair A B;
+mk = "../../std/Pair/mk.coc";
+
+fst : &A : *. &B : *. Pair A B -> A;
+fst = "../../std/Pair/fst.coc";
+
+snd : &A : *. &B : *. Pair A B -> B;
+snd = "../../std/Pair/snd.coc";
+
+while : &R : *.
+    R -> (R -> bool) -> (R -> R) -> R;
+while = "./while.coc";
+
+c_for_loop : &R : *. int -> R -> (int -> R -> bool) ->
+    (int -> int) ->
+    (int -> R -> R) ->
+    R;
+
+c_for_loop =
+    \R : *.
+    \i : int.
+    \x : R.
+    \cond : int -> R -> bool.
+    \inc : int -> int.
+    \body : int -> R -> R.
+
+    snd int R, while (Pair int R) (mk int R i x)
+        (\p : Pair int R.
+            i : int;
+            i = fst int R p;
+
+            x : R;
+            x = snd int R p;
+
+            cond i x)
+        (\p : Pair int R.
+            i : int;
+            i = fst int R p;
+
+            x : R;
+            x = snd int R p;
+
+            mk int R (inc i) (body i x));
+
+c_for_loop

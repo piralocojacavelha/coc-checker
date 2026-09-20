@@ -1,0 +1,7 @@
+
+bool : *;
+bool = "../bool.coc";
+
+coc_c_while_loop : &R : *. R -> (R -> bool) -> (R -> R) -> R;
+
+coc_c_while_loop

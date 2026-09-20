@@ -1,0 +1,7 @@
+
+int : *;
+int = "../int.coc";
+
+coc_c_int_2 : int;
+
+coc_c_int_2

@@ -1,0 +1,133 @@
+
+
+void : *;
+void = "c/void";
+
+run : (void -> void) -> void;
+run = "c/run";
+
+Pair : * -> * -> *;
+Pair = "std/Pair";
+
+mkpair : &A : *. &B : *. A -> B -> Pair A B;
+mkpair = "std/Pair/mk";
+
+fst : &A : *. &B : *. Pair A B -> A;
+fst = "std/Pair/fst";
+
+snd : &A : *. &B : *. Pair A B -> B;
+snd = "std/Pair/snd";
+
+float : *;
+float = "c/float";
+
+print_float : &R : *. float -> R -> R;
+print_float = "c/io/print_float";
+
+vec3 : *;
+vec3 = "std/vec3";
+
+v3 : float -> float -> float -> vec3;
+v3 = "std/vec3/mk";
+
+0f : float;
+0f = "c/float/0";
+
+1f : float;
+1f = "c/float/1";
+
+0_25f : float;
+0_25f = "c/float/0_25";
+
+v3_x : vec3 -> float;
+v3_x = fst float (Pair float float);
+
+v3_y : vec3 -> float;
+v3_y = \v : vec3. 
+    middle : Pair float float;
+    middle = snd float (Pair float float) v;
+
+    fst float float middle;
+
+v3_z : vec3 -> float;
+v3_z = \v : vec3. 
+    middle : Pair float float;
+    middle = snd float (Pair float float) v;
+
+    snd float float middle;
+
+mulf : float -> float -> float;
+mulf = "c/float/mul";
+
+addf : float -> float -> float;
+addf = "c/float/add";
+
+subf : float -> float -> float;
+subf = "c/float/sub";
+
+sqrtf : float -> float;
+sqrtf = "c/float/sqrt";
+
+length : vec3 -> float;
+length = \v : vec3.
+    x : float;
+    x = v3_x v;
+
+    y : float;
+    y = v3_y v;
+
+    z : float;
+    z = v3_z v;
+
+    x_sq : float;
+    x_sq = mulf x x;
+
+    y_sq : float;
+    y_sq = mulf y y;
+
+    z_sq : float;
+    z_sq = mulf z z;
+
+    sum : float;
+    sum = addf x_sq (addf y_sq z_sq);
+
+    sqrtf sum;
+
+v3_comp_wise2 : (float -> float -> float) ->
+    vec3 -> vec3 -> vec3;
+v3_comp_wise2 =
+    \op : float -> float -> float.
+    \u : vec3.
+    \v : vec3.
+
+    x : float;
+    x = op (v3_x u) (v3_x v);
+
+    y : float;
+    y = op (v3_y u) (v3_y v);
+
+    z : float;
+    z = op (v3_z u) (v3_z v);
+
+    v3 x y z;
+
+v3_sub : vec3 -> vec3 -> vec3;
+v3_sub = v3_comp_wise2 subf;
+
+sdf : vec3 -> float;
+sdf = \v : vec3.
+    c : vec3;
+    c = v3 0f 0f 1f;
+
+    r : float;
+    r = 0_25f;
+
+    dist : float;
+    dist = length (v3_sub v c);
+
+    subf dist r;
+
+main : void -> void;
+main = print_float void, sdf (v3 0f 0f 0f);
+
+run main

@@ -1,0 +1,7 @@
+
+int : *;
+int = "../int.coc";
+
+coc_c_read_int : &R : *. (int -> R) -> R;
+
+coc_c_read_int

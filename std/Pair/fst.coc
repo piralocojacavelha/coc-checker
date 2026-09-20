@@ -1,0 +1,7 @@
+
+Pair : * -> * -> *;
+Pair = "../Pair.coc";
+
+coc_pair_fst : &A : *. &B : *. Pair A B -> A;
+
+coc_pair_fst

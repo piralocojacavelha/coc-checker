@@ -1,0 +1,48 @@
+
+int : *;
+int = "c/int";
+
+bool : *;
+bool = "c/bool";
+
+for : &R : *. int -> R -> (int -> R -> bool) ->
+    (int -> int) ->
+    (int -> R -> R) ->
+    R;
+for = "c/loop/for";
+
+print_int : &R : *. int -> R -> R;
+print_int = "c/io/print_int";
+
+0 : int;
+0 = "c/int/0";
+
+1 : int;
+1 = "c/int/1";
+
+32 : int;
+32 = "c/int/32";
+
+lt : int -> int -> bool;
+lt = "c/int/cmp/lt";
+
+add : int -> int -> int;
+add = "c/int/add";
+
+void : *;
+void = "c/void";
+
+run : (void -> void) -> void;
+run = "c/run";
+
+sum : int -> int; 
+sum = \n : int.
+    for int 0 0
+        (\x : int. \acc : int. lt x n)
+        (add 1)
+        (\x : int. \acc : int.
+            add x acc);
+
+run, print_int void (sum 32)
+
+

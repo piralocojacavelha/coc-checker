@@ -1,0 +1,7 @@
+
+float : *;
+float = "../float";
+
+coc_c_float_add : float -> float -> float;
+
+coc_c_float_add

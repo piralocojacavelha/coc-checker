@@ -1,0 +1,6 @@
+void : *;
+void = "void";
+
+coc_c_run : (void -> void) -> void;
+
+coc_c_run

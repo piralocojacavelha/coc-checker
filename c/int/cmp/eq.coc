@@ -1,0 +1,10 @@
+
+int : *;
+int = "../../int.coc";
+
+bool : *;
+bool = "../../bool.coc";
+
+coc_c_int_eq : int -> int -> bool;
+
+coc_c_int_eq

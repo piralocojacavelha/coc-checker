@@ -1,0 +1,97 @@
+
+int : *;
+int = "c/int.coc";
+
+bool : *;
+bool = "c/bool.coc";
+
+void : *;
+void = "c/void.coc";
+
+c_size_t : *;
+c_sizeof_int : c_size_t;
+
+c_if : c_bool -> &R : *. R -> R -> (R -> c_void) -> c_void;
+
+c_void_val : c_void;
+
+c_exit : c_int -> c_void;
+c_int_print : c_int -> c_void -> c_void;
+
+void : *;
+void = c_void;
+
+int : *;
+int = c_int;
+
+bool : *;
+bool = c_bool;
+
+add : int -> int -> int;
+add = c_int_add;
+
+sub : int -> int -> int;
+sub = c_int_sub;
+
+mul : int -> int -> int;
+mul = c_int_mul;
+
+for : int -> (int -> bool) -> (int -> int) -> (int -> void -> void) -> void -> void;
+for = c_for_loop;
+
+
+0 : int;
+0 = c_int_0;
+
+lt : int -> int -> bool;
+lt = c_int_lt;
+
+gte : int -> int -> bool;
+gte = c_int_gte;
+
+eq : int -> int -> bool;
+eq = c_int_eq;
+
+mod : int -> int -> int;
+mod = c_int_mod;
+
+print : int -> void -> void;
+print = c_int_print;
+
+64 : int;
+64 = c_int_64;
+
+1 : int;
+1 = c_int_1;
+
+2 : int;
+2 = c_int_2;
+
+5 : int;
+5 = c_int_5;
+
+run : (void -> void) -> void;
+run = \f : void -> void. f c_void_val;
+
+while : &R : *. R -> (R -> bool) -> (R -> R) -> R;
+while = c_while_loop;
+
+Pair : * -> * -> *;
+Pair_mk : &A : *. &B : *. A -> B -> Pair A B;
+Pair_fst : &A : *. &B : *. Pair A B -> A;
+Pair_snd : &A : *. &B : *. Pair A B -> B;
+
+mkpair : &A : *. &B : *. A -> B -> Pair A B;
+mkpair = Pair_mk;
+
+fst : &A : *. &B : *. Pair A B -> A;
+fst = Pair_fst;
+
+snd : &A : *. &B : *. Pair A B -> B;
+snd = Pair_snd;
+
+read_int : (int -> void) -> void;
+read_int = c_read_int;
+
+*
+

@@ -1,0 +1,17 @@
+
+vec3 : *;
+vec3 = "../vec3";
+
+float : *;
+float = "../../c/float";
+
+Pair : * -> * -> *;
+Pair = "../Pair";
+
+fst : &A : *. &B : *. Pair A B -> A;
+fst = "../Pair/fst";
+
+v3_x : vec3 -> float;
+v3_x = fst float (Pair float float);
+
+v3_x

@@ -1,0 +1,8 @@
+
+bool : *;
+bool = "./bool.coc";
+
+coc_c_if : &R : *. bool -> R -> R -> R;
+
+coc_c_if
+
